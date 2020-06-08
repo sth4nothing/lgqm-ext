@@ -1,0 +1,25 @@
+{
+    "name": "临高启明论坛助手",
+    "version": "0.1",
+    "description": "临高启明论坛助手",
+    "icons": {
+        "200": "img/icon.png"
+    },
+    "background": {
+        "persistent": true,
+        "scripts": ["js/config.js", "js/jquery.min.js", "js/bg.js"]
+    },
+    "options_page": "popup.html",
+    "permissions": ["https://www.lgqm.gq/", "https://www.lgqm.top/", "notifications", "cookies"],
+    "browser_action": {
+        "default_title": "",
+        "default_icon": "img/icon.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [{
+        "matches": ["https://www.lgqm.gq/*", "https://www.lgqm.top/*"],
+        "css": [],
+        "js": ["js/page.js"]
+    }],
+    "manifest_version": 2
+}
