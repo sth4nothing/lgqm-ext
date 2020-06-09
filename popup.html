@@ -1,12 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
+        #go {
+            position: absolute;
+            left: 165px;
+            display: block;
+            padding: 5px 15px 5px 15px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            border: 2px solid #999999;
+        }
+
         input[type="range"] {
             width: 200px;
+            margin: 5px 5px 15px 5px;
         }
 
         .switch {
@@ -91,8 +102,11 @@
         .switch-checkbox:checked+.switch-label .switch-button {
             right: 0px;
         }
+
         body {
-            height: 80px;
+            width: 260px;
+            height: 85px;
+            font-size: 16px;
         }
     </style>
     <script src="js/config.js"></script>
@@ -117,6 +131,7 @@
             <span class="switch-button"></span>
         </label>
     </div>
+    <input type="button" id="go" value="前往论坛">
     <script src="js/popup.js"></script>
 </body>
 
