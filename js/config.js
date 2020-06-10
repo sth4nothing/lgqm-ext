@@ -1,6 +1,7 @@
 const config = {
     interval: "10000",
-    host: "lgqm.top"
+    host: "lgqm.top",
+    blockList: "[]"
 }
 
 for (var key in config) {

@@ -1,0 +1,108 @@
+#go {
+    position: relative;
+    float: left;
+    display: block;
+    padding: 5px 15px 5px 15px;
+    margin-left: 5px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    border: 2px solid #999999;
+}
+
+input[type="range"] {
+    width: 200px;
+    margin: 5px 5px 15px 5px;
+}
+
+.switch {
+    position: relative;
+    float: left;
+    width: 150px;
+    margin: 10px, 0px, 10px, 0px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.switch-checkbox {
+    display: none;
+}
+
+.switch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+}
+
+.switch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+
+.switch-inner::before,
+.switch-inner::after {
+    display: block;
+    float: right;
+    width: 50%;
+    height: 30px;
+    padding: 0;
+    line-height: 30px;
+    font-size: 14px;
+    color: white;
+    font-family:
+        Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.switch-inner::after {
+    content: attr(data-on);
+    padding-left: 35px;
+    background-color: #999999;
+    color: #FFFFFF;
+}
+
+.switch-inner::before {
+    content: attr(data-off);
+    padding-right: 40px;
+    background-color: #EEEEEE;
+    color: #999999;
+    text-align: right;
+}
+
+.switch-button {
+    position: absolute;
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: 4px;
+    background: #FFFFFF;
+    top: 0;
+    bottom: 0;
+    right: 116px;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+
+.switch-checkbox:checked+.switch-label .switch-inner {
+    margin-left: 0;
+}
+
+.switch-checkbox:checked+.switch-label .switch-button {
+    right: 0px;
+}
+
+body {
+    font-size: 16px;
+}
+
+#content {
+    width: max-content;
+    height: max-content;
+    margin: 10px auto auto auto;
+}

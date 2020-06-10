@@ -1,14 +1,37 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>设置</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        body {
-            width: 260px;
-            height: 85px;
+        table {
+            text-align: center;
+            position: relative;
+            float: left;
+            margin: 15px 0 0 0;
+            border: 2px solid #999999;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        table input[type="text"] {
+            width: 120px;
+        }
+
+        table input[type="button"] {
+            width: 68px;
+        }
+
+        table input {
+            padding: 5px;
+            border-radius: 10px;
+            border: 1px solid #999999;
+        }
+
+        td {
+            padding: 5px;
         }
     </style>
     <script src="js/config.js"></script>
@@ -36,8 +59,23 @@
             </label>
         </div>
         <input type="button" id="go" value="前往论坛">
+        <br>
+        <table id="table">
+            <thead>
+                <tr>
+                    <td>用户数字ID</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="userId"></td>
+                    <td><input type="button" id="add" value="新增"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <script src="js/popup.js"></script>
+    <script src="js/options.js"></script>
 </body>
 
 </html>
