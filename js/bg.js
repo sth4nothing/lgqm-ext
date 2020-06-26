@@ -25,14 +25,15 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     }
 });
 
-chrome.runtime.onInstalled.addListener(function () {
-    var contexts = ['link'];
-    chrome.contextMenus.create({
-        title: '屏蔽',
-        contexts: contexts,
-        id: 'blockUser',
-    })
+// chrome.runtime.onInstalled.addListener(function () {
+console.log("register contextMenus")
+var contexts = ['link'];
+chrome.contextMenus.create({
+    title: '屏蔽',
+    contexts: contexts,
+    id: 'blockUser',
 })
+// })
 
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message == 'localStorage') {
