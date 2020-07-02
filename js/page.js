@@ -189,6 +189,11 @@ function do_sowing() {
         ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&depotid=' + depotid + '&formhash=' +
             formhash.value + '&act=germajax&landid=' + id, '')
     }
+    setTimeout(function () {
+        if ($('div#itemsul').css('display') != 'none') {
+            $('div#closemenu').click()
+        }
+    }, 1000)
 }
 
 function sowing() {
