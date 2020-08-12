@@ -91,7 +91,7 @@
 // 施肥
 jQuery('div#closemenu').click()
 jQuery('#itemsul').html('')
-ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&do=19','itemsul')
+ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&do=19', 'itemsul')
 waitElementAppear('#menudiv>ul.line>li', function () {
     var id = document.querySelector('#menudiv>ul.line>li:nth-child(1)').id.substr(6)
     for (var i = 1; i <= 40; i++) {
@@ -100,7 +100,9 @@ waitElementAppear('#menudiv>ul.line>li', function () {
                 .value + '&act=itemajax&landid=' + i + '&uid=' + userid.value, '')
         }
     }
-    setTimeout(() => {jQuery('div#closemenu').click()}, 2000)
+    setTimeout(() => {
+        jQuery('div#closemenu').click()
+    }, 2000)
 })
 </script>
 <script>
@@ -121,16 +123,17 @@ for (var id of lands) {
 <script>
 // 偷菜
 function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 for (var i = 1; i <= 40; i++) {
     var e = document.querySelector('div#title_' + i)
     if (e !== null && e.innerText.indexOf('成熟') >= 0) {
-        (()=>{
+        (() => {
             var j = i;
             setTimeout(() => {
-            ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&formhash=' + formhash.value + '&uid=' + userid.value + '&act=stealcrop&landid=' + j, '')
-        }, getRndInteger(50, 2000))
+                ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&formhash=' + formhash.value +
+                    '&uid=' + userid.value + '&act=stealcrop&landid=' + j, '')
+            }, getRndInteger(50, 2000))
         })();
     }
 }
@@ -148,7 +151,60 @@ for (var i = 1; i <= 40; i++) {
 // 兑出界面
 ajaxget('plugin.php?id=gfarm:front&mod=exchange&act=out&infloat=yes&handlekey=gfarm', 'fwin_content_gfarm')
 // 兑出接口
-jQuery.post('plugin.php?id=gfarm:front&mod=exchange&act=out', {formhash: formhash.value, dnum: 101}, function(data, status, xhr) {
+jQuery.post('plugin.php?id=gfarm:front&mod=exchange&act=out', {
+    formhash: formhash.value,
+    dnum: 101
+}, function (data, status, xhr) {
     console.log(data)
 })
+</script>
+<script>
+// 农场自动收货
+if (jQuery('div#itemsul').css('display') != 'none') {
+    jQuery('div#closemenu').click()
+}
+if (jQuery('div#itemsul').html().trim()) {
+    jQuery('div#itemsul').html('')
+}
+ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&do=9', 'itemsul')
+waitElementAppear('div#itemsul>div#menudiv>ul.line>li', () => {
+    var funcs = []
+    var depotid = document.querySelector('#menudiv>ul.line>li').id.split('_')[1]
+    funcs.push((id) => {
+        ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&depotid=' + depotid + '&formhash=' +
+            formhash.value + '&act=germajax&landid=' + id, '', () => funcs[1](id))
+    }, (id) => {
+        ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&formhash=' + formhash.value +
+            '&act=getcrop&landid=' + id, '', () => funcs[0](id))
+    })
+    for (var id = 1; id <= 40; id++) {
+        var e = document.querySelector('span[id="' + id + '"]')
+        var e2 = document.querySelector('span#_' + id + '>img.cropimg')
+        if (e !== null && e.querySelector('img.jiesuoimg') == null) {
+            funcs[e2 == null ? 0 : 1](id)
+        }
+    }
+})
+</script>
+<script>
+// 自动访问个人主页
+var uids = [23, 26, 31, 37, 286, 368, 423, 523, 595, 2539]
+var ff = document.createElement('div')
+var iframe = document.createElement('iframe')
+iframe.style.width = '100%'
+iframe.style.height = '480px'
+ff.id = 'ff'
+ff.appendChild(iframe)
+var wp = document.getElementById('wp')
+wp.insertBefore(ff, wp.firstElementChild)
+
+function visit() {
+    if (uids.length == 0) return
+    var uid = uids.pop()
+    iframe.src = '/?' + uid
+    if (iframe.onload === null) {
+        iframe.onload = visit
+    }
+}
+visit()
 </script>
