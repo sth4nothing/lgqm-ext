@@ -102,7 +102,7 @@ function appendscript(src, text, reload, charset) {
     } catch (e) {}
 }
 
-function ajaxget(url, showid) {
+function ajaxget(url, showid, callback=null) {
     url = url + '&inajax=1&ajaxtarget=' + showid
     $.get(url, function (data, status, xhr) {
         var xml = xhr.responseXML.lastChild.firstChild.nodeValue
@@ -148,7 +148,10 @@ function ajaxget(url, showid) {
                 appendscript('', arr1[2], arr1[1].indexOf('reload=') != -1)
             }
         }
-    })
+        if (callback !== null) {
+            callback()
+        }
+    }, 'xml')
 }
 
 function waitElementAppear(selector, fn, queryInterval = 500, waitOnce = true) {
