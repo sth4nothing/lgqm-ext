@@ -15,8 +15,12 @@ function waitElementAppear(selector, fn, queryInterval = 500, waitOnce = true) {
  * @param {string} expected_host 期望的域名
  */
 function check_host(expected_host) {
+    if (window.location.host.search(/^(?:www\.)?lgqm\.(?:top|gq)$/) != 0) {
+        return
+    }
     if (window.location.host != expected_host) {
-        window.location.href = '//' + expected_host + window.location.pathname
+        var path = window.location.href.match(/https?\:\/\/[^\/]+(\/.*)/)[1]
+        window.location.href = 'https://' + expected_host + path
         return false
     }
     return true

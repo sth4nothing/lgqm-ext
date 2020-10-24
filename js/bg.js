@@ -51,6 +51,7 @@ chrome.notifications.onButtonClicked.addListener(function () {
 function success(data, stat, xhr) {
     uid = data.Variables.member_uid
     if (uid && Number(uid) > 0) {
+        localStorage.uid = uid
         sum = 0
         for (var key in data.Variables.notice) {
             sum += Number(data.Variables.notice[key])
