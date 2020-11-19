@@ -26,12 +26,19 @@ $(document).ready(function () {
     $('#go').click(function () {
         window.open('https://www.' + localStorage.host, '_blank')
     })
-    $('#wiki').keypress(function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault()
-            console.log($('#wiki').val())
-            if ($('#wiki').val()) {
-                window.open('https://lgqm.huijiwiki.com/wiki/' + $('#wiki').val(), '_blank')
+    $('#wiki').keypress(function (e) {
+        var data = $('#wiki').val()
+        if (data) {
+            switch (e.keyCode) {
+                case 13:
+                    e.preventDefault()
+                    window.open('https://lgqm.huijiwiki.com/index.php?profile=all&fulltext=1&search=' + encodeURI(data), '_blank')
+                    break;
+                case 10:
+                    e.preventDefault()
+                    window.open('https://lgqm.huijiwiki.com/index.php?search=' + encodeURI(data), '_blank')
+                default:
+                    break;
             }
         }
     })

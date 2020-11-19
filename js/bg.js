@@ -23,7 +23,14 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
         case 'wikiSearch': {
             var data = info.selectionText
             if (data) {
-                window.open('https://lgqm.huijiwiki.com/wiki/' + data, '_blank')
+                window.open('https://lgqm.huijiwiki.com/index.php?profile=all&fulltext=1&search=' + encodeURI(data), '_blank')
+            }
+            break
+        }
+        case 'wikiPage': {
+            var data = info.selectionText
+            if (data) {
+                window.open('https://lgqm.huijiwiki.com/index.php?search=' + encodeURI(data), '_blank')
             }
             break
         }
@@ -45,7 +52,12 @@ var menus = [{
     parentId: 'main',
 }, {
     id: 'wikiSearch',
-    title: '在维基中查找“%s”',
+    title: '搜索维基页面%s”',
+    contexts: ['selection'],
+    parentId: 'main',
+}, {
+    id: 'wikiPage',
+    title: '前往/搜索维基页面“%s”',
     contexts: ['selection'],
     parentId: 'main',
 }];
