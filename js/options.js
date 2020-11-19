@@ -1,9 +1,9 @@
-function remove(ev) {
-    var userId = $(ev.target).parent().siblings().text()
+function remove(e) {
+    var userId = $(e.target).parent().siblings().text()
     var blockList = new Set(JSON.parse(localStorage.blockList))
     blockList.delete(userId)
     localStorage.blockList = JSON.stringify(Array.from(blockList))
-    $(ev.target).parent().parent().hide()
+    $(e.target).parent().parent().hide()
 }
 
 $(document).ready(function () {
@@ -36,7 +36,7 @@ $(document).ready(function () {
                     break;
                 case 10:
                     e.preventDefault()
-                    window.open('https://lgqm.huijiwiki.com/index.php?search=' + encodeURI(data), '_blank')
+                    window.open('https://lgqm.huijiwiki.com/index.php?profile=all&search=' + encodeURI(data), '_blank')
                 default:
                     break;
             }

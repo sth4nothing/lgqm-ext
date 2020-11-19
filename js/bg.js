@@ -3,20 +3,52 @@ var status = {
 }
 const scheme = 'https://www.'
 
+function appendBlockUser(userId) {
+    if (Number(userId) > 0) {
+        var blockList = new Set(JSON.parse(localStorage.blockList))
+        blockList.add(userId)
+        localStorage.blockList = JSON.stringify(Array.from(blockList))
+    }
+}
+
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     switch (info.menuItemId) {
         case 'blockUser': {
-            var url = info.linkUrl
+            var url = info.linkUrl || info.pageUrl
             // https://www.lgqm.top/space-uid-360.html
             // https://www.lgqm.top/?360
             // https://www.lgqm.top/home.php?mod=space&uid=360
-            var match = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)?\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*uid=(?<c>\d+))/)
-            if (match != null) {
-                var userId = match.groups.a || match.groups.b || match.groups.c
-                console.log('block', userId)
-                var blockList = new Set(JSON.parse(localStorage.blockList))
-                blockList.add(userId)
-                localStorage.blockList = JSON.stringify(Array.from(blockList))
+            if (url) {
+                var match = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*\buid=(?<c>\d+)\b)/)
+                // 数字uid
+                if (match != null) {
+                    var userId = match.groups.a || match.groups.b || match.groups.c
+                    console.log('block', userId)
+                    appendBlockUser(userId)
+                } else {
+                    var match1 = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)\/(?:space-username-(?<a>.+)\.html|home.php\?.*\busername=(?<b>[^&]+))/)
+                    // username
+                    if (match1 != null) {
+                        var username = decodeURI(match1.groups.a || match1.groups.b)
+                        $.ajax({
+                            method: 'GET',
+                            url: scheme + localStorage.host + '/api/mobile/',
+                            data: {
+                                'version': '4',
+                                'module': 'profile',
+                                'username': username,
+                            },
+                            async: true,
+                            type: 'json',
+                            success: function (data) {
+                                if (data && data.Variables && data.Variables.space && data.Variables.space.uid) {
+                                    var userId = data.Variables.space.uid
+                                    appendBlockUser(userId)
+                                }
+                            }
+                        })
+                    }
+                }
             }
             break
         }
@@ -30,7 +62,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
         case 'wikiPage': {
             var data = info.selectionText
             if (data) {
-                window.open('https://lgqm.huijiwiki.com/index.php?search=' + encodeURI(data), '_blank')
+                window.open('https://lgqm.huijiwiki.com/index.php?profile=all&search=' + encodeURI(data), '_blank')
             }
             break
         }
@@ -39,16 +71,17 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     }
 });
 
-// chrome.runtime.onInstalled.addListener(function () {
 console.log("register contextMenus")
 var menus = [{
     id: 'main',
     title: '临高启明论坛助手',
-    contexts: ['link', 'selection']
-},{
+    contexts: ['page', 'link', 'selection']
+}, {
     id: 'blockUser',
     title: '屏蔽',
-    contexts: ['link'],
+    contexts: ['page', 'link'],
+    documentUrlPatterns: ['https://*.lgqm.gq/*', 'https://*.lgqm.top/*'],
+    targetUrlPatterns: ['https://*.lgqm.gq/*', 'https://*.lgqm.top/*'],
     parentId: 'main',
 }, {
     id: 'wikiSearch',
@@ -62,10 +95,8 @@ var menus = [{
     parentId: 'main',
 }];
 for (var menu of menus) {
-    console.log(menu)
     chrome.contextMenus.create(menu)
 }
-// })
 
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message == 'localStorage') {
