@@ -26,6 +26,15 @@ $(document).ready(function () {
     $('#go').click(function () {
         window.open('https://www.' + localStorage.host, '_blank')
     })
+    $('#wiki').keypress(function(e) {
+        if (e.keyCode == 13) {
+            e.preventDefault()
+            console.log($('#wiki').val())
+            if ($('#wiki').val()) {
+                window.open('https://lgqm.huijiwiki.com/wiki/' + $('#wiki').val(), '_blank')
+            }
+        }
+    })
     $('#add').click(function () {
         if (Number($('#userId').val()) > 0) {
             var userId = '' + Number($('#userId').val())

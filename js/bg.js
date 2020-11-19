@@ -4,22 +4,29 @@ var status = {
 const scheme = 'https://www.'
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    var url = info.linkUrl
-    // https://www.lgqm.top/space-uid-360.html
-    // https://www.lgqm.top/?360
-    // https://www.lgqm.top/home.php?mod=space&uid=360
-    var match = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)?\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*uid=(?<c>\d+))/)
-    if (match == null) {
-        return
-    }
-    var userId = match.groups.a || match.groups.b || match.groups.c
     switch (info.menuItemId) {
-        case 'blockUser':
-            console.log('block', userId)
-            var blockList = new Set(JSON.parse(localStorage.blockList))
-            blockList.add(userId)
-            localStorage.blockList = JSON.stringify(Array.from(blockList))
+        case 'blockUser': {
+            var url = info.linkUrl
+            // https://www.lgqm.top/space-uid-360.html
+            // https://www.lgqm.top/?360
+            // https://www.lgqm.top/home.php?mod=space&uid=360
+            var match = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)?\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*uid=(?<c>\d+))/)
+            if (match != null) {
+                var userId = match.groups.a || match.groups.b || match.groups.c
+                console.log('block', userId)
+                var blockList = new Set(JSON.parse(localStorage.blockList))
+                blockList.add(userId)
+                localStorage.blockList = JSON.stringify(Array.from(blockList))
+            }
             break
+        }
+        case 'wikiSearch': {
+            var data = info.selectionText
+            if (data) {
+                window.open('https://lgqm.huijiwiki.com/wiki/' + data, '_blank')
+            }
+            break
+        }
         default:
             break
     }
@@ -27,12 +34,25 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 
 // chrome.runtime.onInstalled.addListener(function () {
 console.log("register contextMenus")
-var contexts = ['link'];
-chrome.contextMenus.create({
-    title: '屏蔽',
-    contexts: contexts,
+var menus = [{
+    id: 'main',
+    title: '临高启明论坛助手',
+    contexts: ['link', 'selection']
+},{
     id: 'blockUser',
-})
+    title: '屏蔽',
+    contexts: ['link'],
+    parentId: 'main',
+}, {
+    id: 'wikiSearch',
+    title: '在维基中查找“%s”',
+    contexts: ['selection'],
+    parentId: 'main',
+}];
+for (var menu of menus) {
+    console.log(menu)
+    chrome.contextMenus.create(menu)
+}
 // })
 
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {

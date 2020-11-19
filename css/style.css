@@ -8,6 +8,13 @@
     font-size: 0.95rem;
     border: 2px solid #999999;
 }
+#wiki {
+    margin-top: 15px;
+    width: 216px;
+    padding: 5px 15px 5px 15px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+}
 
 input[type="range"] {
     width: 200px;
