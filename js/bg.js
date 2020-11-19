@@ -57,7 +57,7 @@ var menus = [{
     parentId: 'main',
 }, {
     id: 'wikiPage',
-    title: '前往|搜索维基页面“%s”',
+    title: '前往or搜索维基页面“%s”',
     contexts: ['selection'],
     parentId: 'main',
 }];
