@@ -57,7 +57,7 @@ function manifest() {
 }
 
 function pack() {
-    var filename = name + '-' + version + '.zip'
+    var filename = name + '-v' + version + '.zip'
     return gulp.src(exportDir + '/**/*', {
             base: exportRoot
         })
@@ -80,4 +80,5 @@ exports.pack = pack
 exports.build = build
 
 exports.clean = clean
+exports.rebuild = gulp.series(clean, build)
 exports.default = files
