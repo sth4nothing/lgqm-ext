@@ -1,2 +1,5 @@
 test.html
 push.ps1
+node_modules/*
+dist/*
+lgqm-ext-*.zip

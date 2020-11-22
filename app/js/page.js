@@ -1,3 +1,5 @@
+const $ = require('jquery')
+
 function waitElementAppear(selector, fn, queryInterval = 500, waitOnce = true) {
     var e = document.querySelector(selector)
     if (e) {
@@ -26,14 +28,14 @@ function check_host(expected_host) {
     return true
 }
 
-chrome.extension.sendMessage({
+chrome.runtime.sendMessage({
     message: 'localStorage'
 }, function (data) {
     console.log(data)
 
     if (!check_host('www.' + data.host)) return
 
-    $(document).ready(function () {
+    $(function () {
         function blockPost(blockList) {
             var posts = document.querySelectorAll('div#postlist>div[id^="post_"]')
             for (var post of posts) {
@@ -41,7 +43,7 @@ chrome.extension.sendMessage({
                 if (a && a.href !== undefined) {
                     var match = a.href.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)?\/space\-uid\-(?<uid>\d+)\.html$/)
                     if (match && match.groups.uid !== undefined) {
-                        uid = match.groups.uid
+                        var uid = match.groups.uid
                         if (blockList.has(uid)) {
                             post.style.display = 'none'
                         }
@@ -114,7 +116,6 @@ function farm() {
         var scriptNode = document.createElement("script")
         scriptNode.type = "text/javascript"
         scriptNode.id = id
-        scriptNode.charset = charset ? charset : (document.characterSet ? document.characterSet : document.charset);
         try {
             if (src) {
                 scriptNode.src = src
@@ -154,7 +155,7 @@ function farm() {
                     }
                     var div1 = document.createElement('DIV')
                     div1.id = element.id + '_div'
-                    div1.innerHTML = '<table><tbody id="' + element.id + '_tbody">' + s + '</tbody></table>'
+                    div1.innerHTML = '<table><tbody id="' + element.id + '_tbody">' + xml + '</tbody></table>'
                     document.getElementById('append_parent').appendChild(div1)
                     var trs = div1.getElementsByTagName('TR')
                     var l = trs.length
@@ -216,14 +217,14 @@ function farm() {
         }
         setTimeout(function () {
             if ($('div#itemsul').css('display') != 'none') {
-                $('div#closemenu').click()
+                $('div#closemenu').trigger('click')
             }
         }, 1000)
     }
 
     function sowing() {
         if ($('div#itemsul').css('display') != 'none') {
-            $('div#closemenu').click()
+            $('div#closemenu').trigger('click')
         }
         if ($('div#itemsul').html().trim()) {
             $('div#itemsul').html('')
@@ -267,11 +268,11 @@ function farm() {
      * 自动种植
      */
     function auto_plant() {
-        if (jQuery('div#itemsul').css('display') != 'none') {
-            jQuery('div#closemenu').click()
+        if ($('div#itemsul').css('display') != 'none') {
+            $('div#closemenu').trigger('click')
         }
-        if (jQuery('div#itemsul').html().trim()) {
-            jQuery('div#itemsul').html('')
+        if ($('div#itemsul').html().trim()) {
+            $('div#itemsul').html('')
         }
         ajaxget('plugin.php?id=gfarm:front&mod=gfarm_ajax&do=9', 'itemsul')
         waitElementAppear('div#itemsul>div#menudiv>ul.line>li', () => {
@@ -301,13 +302,13 @@ function farm() {
      * 购买种子
      */
     function buy_seed() {
-        jQuery.post('plugin.php?id=gfarm:front&mod=shop&act=buy&formhash=' + formhash.value, {
+        $.post('plugin.php?id=gfarm:front&mod=shop&act=buy&formhash=' + formhash.value, {
             goodid: 63,
             do: 9,
             dnum: 999
         }, function () {
             if ($('div#itemsul').css('display') != 'none') {
-                $('div#closemenu').click()
+                $('div#closemenu').trigger('click')
             }
             if ($('div#itemsul').html().trim()) {
                 $('div#itemsul').html('')
@@ -323,15 +324,16 @@ function farm() {
         $('div#usermenu').append(
             '<span id="harvest"><img src="/source/plugin/gfarm/img/ui/hand.png"/><font>自动种植</font></span>'
         )
-        $('div#usermenu>span#sowing').click(buy_seed)
-        $('div#usermenu>span#harvest').click(do_all)
+        $('div#usermenu>span#sowing').on('click', buy_seed)
+        $('div#usermenu>span#harvest').on('click', do_all)
         $('#usermenu>span').css('width', '80px')
     })
 }
 
 
 if (window.location.href.indexOf('/plugin.php?id=gfarm:front') >= 0) {
-    $(document).ready(function () {
-        farm()
-    })
+    $(farm)
 }
+exports.waitElementAppear = waitElementAppear
+exports.check_host = check_host
+exports.farm = farm

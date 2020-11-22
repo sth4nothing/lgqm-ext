@@ -9,3 +9,4 @@ for (var key in config) {
         localStorage[key] = config[key]
     }
 }
+exports.config = config

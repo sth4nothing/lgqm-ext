@@ -1,0 +1,26 @@
+{
+  "name": "lgqm-ext",
+  "version": "0.8.0",
+  "main": "index.js",
+  "description": "My webpack project",
+  "repository": "https://gitee.com/sth4nothing/lgqm-ext.git",
+  "author": "sth4nothing",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.5.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.126",
+    "@types/jquery": "^3.5.4",
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-replace": "^1.0.0",
+    "gulp-zip": "^5.0.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-named": "^1.1.0",
+    "webpack-stream": "^6.1.1"
+  },
+  "scripts": {
+    "build": "gulp"
+  }
+}

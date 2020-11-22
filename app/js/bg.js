@@ -1,3 +1,6 @@
+const $ = require('jquery')
+const config = require('./config')
+
 var status = {
     last_sum: -1,
 }
@@ -69,7 +72,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
         default:
             break
     }
-});
+})
 
 console.log("register contextMenus")
 var menus = [{
@@ -93,18 +96,18 @@ var menus = [{
     title: '前往or搜索维基页面“%s”',
     contexts: ['selection'],
     parentId: 'main',
-}];
+}]
 for (var menu of menus) {
     chrome.contextMenus.create(menu)
 }
 
-chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message == 'localStorage') {
         sendResponse(localStorage)
     } else {
         sendResponse({})
     }
-});
+})
 
 chrome.notifications.onButtonClicked.addListener(function () {
     var url = scheme + localStorage.host + '/home.php?mod=space&do=notice'
@@ -163,3 +166,10 @@ function query() {
     setTimeout(query, Math.max(Number(localStorage.interval), 5) * 1000)
 }
 query()
+exports.config = config
+exports.scheme = scheme
+exports.status = status
+exports.appendBlockUser = appendBlockUser
+exports.success = success
+exports.fail = fail
+exports.query = query
