@@ -1,6 +1,6 @@
 {
   "name": "lgqm-ext",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "index.js",
   "description": "My webpack project",
   "repository": "https://gitee.com/sth4nothing/lgqm-ext.git",

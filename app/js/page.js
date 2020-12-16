@@ -52,11 +52,12 @@ chrome.runtime.sendMessage({
             }
         }
         const blockList = new Set(JSON.parse(data.blockList))
-        var url = window.location.pathname
-        if (url.search(/\/thread\-\d+\-\d+\-\d+\.html/) == 0) {
+        const pathname = window.location.pathname
+        if (pathname.search(/\/thread\-\d+\-\d+\-\d+\.html/) == 0) {
             blockPost(blockList)
-        } else {
-            var match1 = url.match(/\/forum\.php\?(?<params>.+)$/)
+        } else if (pathname.search(/\/forum\.php/) == 0) {
+            const queryParams = window.location.search
+            var match1 = queryParams.match(/\?(?<params>.+)$/)
             if (match1 && match1.groups.params !== undefined) {
                 var matches = match1.groups.params.matchAll(/(?<key>[^&=]+)=(?<val>[\w\W]*?)(?=$|&)/g)
                 var params = {}
