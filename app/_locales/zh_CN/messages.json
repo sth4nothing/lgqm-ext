@@ -1,0 +1,10 @@
+{
+    "appName": {
+      "message": "临高启明论坛助手",
+      "description": "The title of the application, displayed in the web store."
+    },
+    "appDesc": {
+      "message": "临高启明论坛助手，支持：论坛新消息提醒；自动域名跳转;南海农场自动收菜；屏蔽指定用户贴子；跳转到维基页面。",
+      "description":"The description of the application, displayed in the web store."
+    }
+  }

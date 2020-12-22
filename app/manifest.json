@@ -1,7 +1,7 @@
 {
-    "name": "临高启明论坛助手",
+    "name": "__MSG_appName__",
     "version": "{version}",
-    "description": "临高启明论坛助手",
+    "description": "__MSG_appDesc__",
     "icons": {
         "200": "img/icon.png"
     },
@@ -21,5 +21,6 @@
         "css": [],
         "js": ["js/page.js"]
     }],
-    "manifest_version": 2
+    "manifest_version": 2,
+    "default_locale": "zh_CN"
 }
