@@ -45,6 +45,11 @@ function doc() {
         .pipe(gulp.dest(exportDir))
 }
 
+function locales() {
+    return gulp.src('app/_locales/**/*')
+        .pipe(gulp.dest(exportDir + '/_locales'))
+}
+
 function asset() {
     return gulp.src(['app/favicon.ico'])
         .pipe(gulp.dest(exportDir))
@@ -65,7 +70,7 @@ function pack() {
         .pipe(gulp.dest(exportRoot))
 }
 
-var files = gulp.parallel(js, css, img, html, doc, asset, manifest)
+var files = gulp.parallel(js, css, img, html, doc, locales, asset, manifest)
 var build = gulp.series(files, pack)
 
 exports.asset = asset
