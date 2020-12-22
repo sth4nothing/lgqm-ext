@@ -1,5 +1,6 @@
 const $ = require('jquery')
 var config = require('./config')
+const scheme = 'https://'
 
 function remove(e) {
     var userId = $(e.target).parent().siblings().text()
@@ -9,15 +10,23 @@ function remove(e) {
     $(e.target).parent().parent().hide()
 }
 
+function visit(e) {
+    const userId = e.target.innerText
+    window.open(scheme + localStorage.host + '/?' + userId, '_blank')
+}
+
 $(function () {
     $('#interval').val(localStorage.interval)
     $('#span').text(localStorage.interval + 's')
     $('#toggle').prop('checked', localStorage.host == 'lgqm.gq')
     var blockList = JSON.parse(localStorage.blockList)
     for (var userId of blockList) {
-        $('<tr><td>{userId}</td><td><input type="button" value="删除"></td></tr>'.replace('{userId}', '' + userId)).insertBefore(
+        var jq = $('<tr><td><a href>{userId}</a></td><td><input type="button" value="删除"></td></tr>'.replace(/{userId}/g, userId)
+        ).insertBefore(
             $('#add').parent().parent()
-        ).find('input[type="button"]').on('click', remove)
+        )
+        jq.find('input[type="button"]').on('click', remove)
+        jq.find('a').on('click', visit)
     }
     $('#interval').on('change', function () {
         localStorage.interval = $('#interval').val()
@@ -27,7 +36,7 @@ $(function () {
         localStorage.host = $('#toggle').prop('checked') ? 'lgqm.gq' : 'lgqm.top'
     })
     $('#go').on('click', function () {
-        window.open('https://www.' + localStorage.host, '_blank')
+        window.open(scheme + localStorage.host, '_blank')
     })
     $('#wiki').on('keypress', function (e) {
         var data = $('#wiki').val()
@@ -46,8 +55,10 @@ $(function () {
             var blockList = new Set(JSON.parse(localStorage.blockList))
             blockList.add(userId)
             localStorage.blockList = JSON.stringify(Array.from(blockList))
-            $('<tr><td>{userId}</td><td><input type="button" value="删除"></td></tr>'.replace('{userId}', userId)).insertBefore(
-                $('#add').parent().parent()).find('input[type="button"]').on('click', remove)
+            var jq = $('<tr><td><a href>{userId}</a></td><td><input type="button" value="删除"></td></tr>'.replace(/{userId}/g, userId)).insertBefore(
+                $('#add').parent().parent())
+            jq.find('input[type="button"]').on('click', remove)
+            jq.find('a').on('click', visit)
             $('#userId').val('')
             $('#userId').trigger('focus')
         } else {

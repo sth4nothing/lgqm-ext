@@ -1,4 +1,6 @@
 const $ = require('jquery')
+const scheme = 'https://'
+const prefix = scheme.replace(/https?\:\/\//g, '')
 
 function waitElementAppear(selector, fn, queryInterval = 500, waitOnce = true) {
     var e = document.querySelector(selector)
@@ -18,7 +20,10 @@ function waitElementAppear(selector, fn, queryInterval = 500, waitOnce = true) {
  */
 function check_host(expected_host) {
     if (window.location.host.search(/^(?:www\.)?lgqm\.(?:top|gq)$/) != 0) {
-        return
+        return false
+    }
+    if (window.location.pathname == '/Settings/') {
+        return false
     }
     if (window.location.host != expected_host) {
         var path = window.location.href.match(/https?\:\/\/[^\/]+(\/.*)/)[1]
@@ -33,43 +38,44 @@ chrome.runtime.sendMessage({
 }, function (data) {
     console.log(data)
 
-    if (!check_host('www.' + data.host)) return
+    if (!check_host(prefix + data.host)) return
 
-    $(function () {
-        function blockPost(blockList) {
-            var posts = document.querySelectorAll('div#postlist>div[id^="post_"]')
-            for (var post of posts) {
-                var a = post.querySelector('table.plhin>tbody>tr:first-child>td.pls>div>div.pi>div.authi>a.xw1')
-                if (a && a.href !== undefined) {
-                    var match = a.href.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)?\/space\-uid\-(?<uid>\d+)\.html$/)
-                    if (match && match.groups.uid !== undefined) {
-                        var uid = match.groups.uid
-                        if (blockList.has(uid)) {
-                            post.style.display = 'none'
-                        }
+    
+    function blockPost(blockList) {
+        console.log('block')
+        var posts = document.querySelectorAll('div#postlist>div[id^="post_"]')
+        for (var post of posts) {
+            var a = post.querySelector('table.plhin>tbody>tr:first-child>td.pls>div>div.pi>div.authi>a.xw1')
+            if (a && a.href !== undefined) {
+                var match = a.href.match(/^https:\/\/(?:www\.)?lgqm\.(?:gq|top)?\/space\-uid\-(?<uid>\d+)\.html$/)
+                if (match && match.groups.uid !== undefined) {
+                    var uid = match.groups.uid
+                    if (blockList.has(uid)) {
+                        post.style.display = 'none'
                     }
                 }
             }
         }
-        const blockList = new Set(JSON.parse(data.blockList))
-        const pathname = window.location.pathname
-        if (pathname.search(/\/thread\-\d+\-\d+\-\d+\.html/) == 0) {
-            blockPost(blockList)
-        } else if (pathname.search(/\/forum\.php/) == 0) {
-            const queryParams = window.location.search
-            var match1 = queryParams.match(/\?(?<params>.+)$/)
-            if (match1 && match1.groups.params !== undefined) {
-                var matches = match1.groups.params.matchAll(/(?<key>[^&=]+)=(?<val>[\w\W]*?)(?=$|&)/g)
-                var params = {}
-                for (var match of matches) {
-                    params[match.groups.key] = match.groups.val
-                }
-                if (params.mod == 'viewthread' && params.tid !== undefined) {
-                    blockPost(blockList)
-                }
+    }
+    const blockList = new Set(JSON.parse(data.blockList))
+    const pathname = window.location.pathname
+    if (pathname.search(/\/thread\-\d+\-\d+\-\d+\.html/) == 0) {
+        blockPost(blockList)
+    } else if (pathname.search(/\/forum\.php/) == 0) {
+        const queryParams = window.location.search
+        var match1 = queryParams.match(/\?(?<params>.+)$/)
+        if (match1 && match1.groups.params !== undefined) {
+            var matches = match1.groups.params.matchAll(/(?<key>[^&=]+)=(?<val>[\w\W]*?)(?=$|&)/g)
+            var params = {}
+            for (var match of matches) {
+                params[match.groups.key] = match.groups.val
+            }
+            if (params.mod == 'viewthread' && params.tid !== undefined) {
+                blockPost(blockList)
             }
         }
-    })
+    }
+    
 })
 
 /**
@@ -335,6 +341,7 @@ function farm() {
 if (window.location.href.indexOf('/plugin.php?id=gfarm:front') >= 0) {
     $(farm)
 }
+exports.jQuery = $
 exports.waitElementAppear = waitElementAppear
 exports.check_host = check_host
 exports.farm = farm

@@ -1,10 +1,11 @@
 const $ = require('jquery')
 const config = require('./config')
+const scheme = 'https://'
+const prefix = scheme.replace(/https?\:\/\//g, '')
 
 var status = {
     last_sum: -1,
 }
-const scheme = 'https://www.'
 
 function appendBlockUser(userId) {
     if (Number(userId) > 0) {
@@ -22,14 +23,14 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
             // https://www.lgqm.top/?360
             // https://www.lgqm.top/home.php?mod=space&uid=360
             if (url) {
-                var match = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*\buid=(?<c>\d+)\b)/)
+                var match = url.match(/^https:\/\/(?:www\.)?lgqm\.(?:gq|top)\/(?:space\-uid\-(?<a>\d+)\.html|\?(?<b>\d+)|home.php\?.*\buid=(?<c>\d+)\b)/)
                 // 数字uid
                 if (match != null) {
                     var userId = match.groups.a || match.groups.b || match.groups.c
                     console.log('block', userId)
                     appendBlockUser(userId)
                 } else {
-                    var match1 = url.match(/^https:\/\/(?:www)?\.lgqm\.(?:gq|top)\/(?:space-username-(?<a>.+)\.html|home.php\?.*\busername=(?<b>[^&]+))/)
+                    var match1 = url.match(/^https:\/\/(?:www\.)?lgqm\.(?:gq|top)\/(?:space-username-(?<a>.+)\.html|home.php\?.*\busername=(?<b>[^&]+))/)
                     // username
                     if (match1 != null) {
                         var username = decodeURI(match1.groups.a || match1.groups.b)
