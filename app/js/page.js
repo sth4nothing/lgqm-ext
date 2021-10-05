@@ -191,7 +191,7 @@ function farm() {
                 }
             }
             if (callback !== null) {
-                callback()
+                callback(data)
             }
         }, 'xml')
     }

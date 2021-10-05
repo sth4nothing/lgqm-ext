@@ -2,6 +2,7 @@ var gulp = require('gulp')
 var del = require('del')
 var webpack = require('webpack-stream')
 var named = require('vinyl-named')
+var rename = require('gulp-rename')
 var replace = require('gulp-replace')
 var zip = require('gulp-zip')
 
@@ -70,6 +71,14 @@ function pack() {
         .pipe(gulp.dest(exportRoot))
 }
 
+function ext() {
+    return gulp.src(exportRoot + '/*.zip')
+        .pipe(rename({
+            extname: '.crx'
+        }))
+        .pipe(gulp.dest(exportRoot))
+}
+
 var files = gulp.parallel(js, css, img, html, doc, locales, asset, manifest)
 var build = gulp.series(files, pack)
 
@@ -82,6 +91,7 @@ exports.js = js
 exports.manifest = manifest
 exports.files = files
 exports.pack = pack
+exports.ext = ext
 exports.build = build
 
 exports.clean = clean
